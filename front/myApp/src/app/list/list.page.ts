@@ -11,7 +11,8 @@ export class ListPage implements OnInit {
 
   private newChat: string;
 
-  messages: Array<{ content: string; date: Date; writer: string; channel: string }> = [];
+  messages: any[] = [];
+  // messages: Array<{ id?: string, content: string; date: Date; author: string; channel: string }> = [];
 
   private selectedItem: any;
   private icons = [
@@ -27,7 +28,7 @@ export class ListPage implements OnInit {
     'build'
   ];
 
-  public items: Array<{ title: string; note: string; icon: string }> = [];
+  public items: any[] = [];
 
   constructor(
     private messagesService: MessagesService
@@ -56,6 +57,7 @@ export class ListPage implements OnInit {
 
   updateMessages(channel: string) {
     this.messagesService.getMessagesFromAPI().subscribe((response: any) => {
+      console.warn('MESSAGE MOCKUP FROM API', response);
       this.messages = response;
     });
   }
@@ -77,14 +79,15 @@ export class ListPage implements OnInit {
     this.messagesService.sendMessage({
       content: this.newChat,
       date: new Date(),
-      writer: 'greg@d82.io',
+      author: 'greg@d82.io',
       channel: '1'
+    }).then((response: any[]) => {
+      this.messages = response;
+      // this.scrollToBottom();
+      setTimeout(() => this.scrollToBottom(), 250); // wait for the list to be locally updated befor scrolling
     });
 
     this.newChat = undefined;
-    setTimeout(() => this.scrollToBottom(), 250); // wait for the list to be locally updated befor scrolling
-    this.updateMessages('1');
-    this.scrollToBottom();
   }
 
   scrollToBottom() {

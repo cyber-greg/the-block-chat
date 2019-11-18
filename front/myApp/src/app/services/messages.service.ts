@@ -1,27 +1,23 @@
 import { Injectable } from '@angular/core';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessagesService {
 
+  apiUrl = `${environment.API}`;
+
   channels: any[];
   messages: any[];
 
-  constructor() {
+  constructor(
+    private http: HttpClient,
+  ) {
     this.channels = ['1', '2', '3'];
-
     this.messages = [];
-
-    for (let i = 1; i < 11; i++) {
-      this.messages.push({
-        content: 'Message ' + i,
-        date: new Date(),
-        writer: 'greg@d82.io',
-        channel: '1'
-      });
-    }
   }
 
 
@@ -30,11 +26,23 @@ export class MessagesService {
   }
 
 
-  getMessagesFromAPI() {
-    return of(this.messages);
+  getMessagesFromAPI(): Observable<object> {
+    return this.http.get(`${this.apiUrl}/chat/`);
   }
 
+
   sendMessage(message: any) {
-    this.messages.push(message);
+    const messageJSON = JSON.stringify(message);
+
+    return new Promise((resolve, reject) => {
+      this.http.post(`${this.apiUrl}/chat/`, messageJSON)
+        .subscribe((res: any) => {
+          console.warn('API POST MESSAGE res', res);
+          resolve(res);
+        }, (err) => {
+          console.error('API POST MESSAGE res', err);
+          reject(err);
+        });
+    });
   }
 }

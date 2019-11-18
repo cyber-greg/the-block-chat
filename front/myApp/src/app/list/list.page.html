@@ -16,14 +16,19 @@
 
       <ion-item *ngIf="isMyChat(i)">
         <span class="speech-date" style="font-size: 0.7em;" slot="start">
-          {{ message.date | date:'dd/MM - HH:mm:ss' }}</span>
+          {{ message.created_at | date:'dd/MM - HH:mm:ss' }}</span>
       </ion-item>
 
       <ion-item *ngIf="isMyChat(i)">
         <div class="speech-bubble" slot="start">
-          <span style="font-size: 0.7em; font-style: italic;">{{ message.writer}} <br><br></span>
+          <span style="font-size: 0.7em; font-style: italic;">{{ message.author}} <br><br></span>
           {{message.content}}
         </div>
+      </ion-item>
+
+      <ion-item *ngIf="!isMyChat(i)">
+        <span class="speech-date" style="font-size: 0.7em;margin-right: 15px;" slot="end">
+          {{ message.created_at | date:'dd/MM - HH:mm:ss' }}</span>
       </ion-item>
 
       <ion-item *ngIf="!isMyChat(i)">
