@@ -33,13 +33,13 @@ export class ListPage implements OnInit {
   constructor(
     private messagesService: MessagesService
   ) {
-    for (let i = 1; i < 11; i++) {
-      this.items.push({
-        title: 'Item ' + i,
-        note: 'This is item #' + i,
-        icon: this.icons[Math.floor(Math.random() * this.icons.length)]
-      });
-    }
+    // for (let i = 1; i < 11; i++) {
+    //   this.items.push({
+    //     title: 'Item ' + i,
+    //     note: 'This is item #' + i,
+    //     icon: this.icons[Math.floor(Math.random() * this.icons.length)]
+    //   });
+    // }
 
     this.updateMessages('1');
   }
@@ -85,9 +85,9 @@ export class ListPage implements OnInit {
       this.messages = response;
       // this.scrollToBottom();
       setTimeout(() => this.scrollToBottom(), 250); // wait for the list to be locally updated befor scrolling
+      this.newChat = undefined;
     });
 
-    this.newChat = undefined;
   }
 
   scrollToBottom() {

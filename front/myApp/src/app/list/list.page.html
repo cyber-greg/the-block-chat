@@ -12,26 +12,29 @@
 <ion-content #content>
 
   <ion-list lines="none">
+
     <div *ngFor="let message of messages; let i = index">
 
-      <ion-item *ngIf="isMyChat(i)">
+      <!-- OTHER CHAT -->
+      <ion-item *ngIf="!isMyChat(i)">
         <span class="speech-date" style="font-size: 0.7em;" slot="start">
           {{ message.created_at | date:'dd/MM - HH:mm:ss' }}</span>
       </ion-item>
 
-      <ion-item *ngIf="isMyChat(i)">
+      <ion-item *ngIf="!isMyChat(i)">
         <div class="speech-bubble" slot="start">
           <span style="font-size: 0.7em; font-style: italic;">{{ message.author}} <br><br></span>
           {{message.content}}
         </div>
       </ion-item>
 
-      <ion-item *ngIf="!isMyChat(i)">
+      <!-- MY CHAT -->
+      <ion-item *ngIf="isMyChat(i)">
         <span class="speech-date" style="font-size: 0.7em;margin-right: 15px;" slot="end">
           {{ message.created_at | date:'dd/MM - HH:mm:ss' }}</span>
       </ion-item>
 
-      <ion-item *ngIf="!isMyChat(i)">
+      <ion-item *ngIf="isMyChat(i)">
         <div class="item-note my-bubble" slot="end">
           {{message.content}}
         </div>

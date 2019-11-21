@@ -29,11 +29,11 @@ class Message(models.Model):
 
     created_at = models.DateTimeField(auto_now_add=True,
                                       blank=True,
-                                      verbose_name="Create At")
+                                      verbose_name="Created At")
 
     def __str__(self):
         return "{} : <{}> - {}".format(
-            self.content,
+            self.author,
             self.date,
             self.content
         )
