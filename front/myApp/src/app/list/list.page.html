@@ -1,0 +1,67 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Messages
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content #content>
+
+  <ion-list lines="none">
+
+    <div *ngFor="let message of messages; let i = index">
+
+      <!-- OTHER CHAT -->
+      <ion-item *ngIf="!isMyChat(i)">
+        <span class="speech-date" style="font-size: 0.7em;" slot="start">
+          {{ message.created_at | date:'dd/MM - HH:mm:ss' }}</span>
+      </ion-item>
+
+      <ion-item *ngIf="!isMyChat(i)">
+        <div class="speech-bubble" slot="start">
+          <span style="font-size: 0.7em; font-style: italic;">{{ message.author}} <br><br></span>
+          {{message.content}}
+        </div>
+      </ion-item>
+
+      <!-- MY CHAT -->
+      <ion-item *ngIf="isMyChat(i)">
+        <span class="speech-date" style="font-size: 0.7em;margin-right: 15px;" slot="end">
+          {{ message.created_at | date:'dd/MM - HH:mm:ss' }}</span>
+      </ion-item>
+
+      <ion-item *ngIf="isMyChat(i)">
+        <div class="item-note my-bubble" slot="end">
+          {{message.content}}
+        </div>
+      </ion-item>
+    </div>
+
+    <!-- <ion-item>
+      <div class="speech-bubble" slot="start">
+        Salut, c'est un texte super long pour voir comment se comporte une bulle
+      </div>
+    </ion-item>
+
+    <ion-item>
+      <div class="my-bubble" slot="end">
+        Salut, c'est une réponse aussi super longue pour voir comment se comporte une bulle de réponse.
+        <br><br>
+        Mais là, c'est moi qui parle !
+      </div>
+    </ion-item> -->
+
+
+  </ion-list>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-input type="text" placeholder="ChatFlow >" [(ngModel)]="newChat" (keyup.enter)="sendChat()"></ion-input>
+  </ion-toolbar>
+</ion-footer>
