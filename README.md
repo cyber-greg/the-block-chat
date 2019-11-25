@@ -38,5 +38,6 @@ From the `back/the_blockchat_rest` directory:
 python3 -m venv venv # or simply 'python' on windows
 source venv/bin/activate # venv/Scripts/activate on windows
 pip install -r requirements.txt
+./manage.py migrate
 ./manage.py runserver
 ```
