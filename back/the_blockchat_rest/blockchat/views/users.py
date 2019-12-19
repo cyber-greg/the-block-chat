@@ -46,7 +46,4 @@ def users(request):
 
     print("PARSED_RESPONCE > {}".format(parsed_response))
 
-    return JsonResponse(parsed_response, safe=False)
-
-    # data = serializers.serialize('json', parsed_response, fields=('pk', 'full_name','email'))
-    # return HttpResponse(data, content_type="application/json")
+    return JsonResponse(parsed_response, safe=False, json_dumps_params={'ensure_ascii': False})

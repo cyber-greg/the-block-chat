@@ -47,9 +47,11 @@ def messages(request):
             "channelId": str(message.channel),
             "userId": str(message.author.id),
             "content": message.content,
-            "createdAt": message.created_at
+            "createdAt": message.created_at.isoformat()
         })
 
     print("PARSED_RESPONCE > {}".format(parsed_response))
 
-    return JsonResponse(parsed_response, safe=False)
+    return JsonResponse(parsed_response, safe=False, json_dumps_params={'ensure_ascii': False})
+
+    # return JsonResponse(parsed_response, safe=False)

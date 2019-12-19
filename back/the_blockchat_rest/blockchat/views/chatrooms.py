@@ -34,7 +34,7 @@ def chatrooms(request):
     # elif userID:
     #     response = Chatroom.objects.filter(chatroom__id__contains=channelID) # ! FIXME
     else:
-        response = Chatroom.objects.all()
+        response = Chatroom.objects.all() # ! only chatroom where I am allowed
 
     # data = serializers.serialize('json', response)
     # return HttpResponse(data, content_type="application/json")
@@ -56,4 +56,4 @@ def chatrooms(request):
 
     print("PARSED_RESPONCE > {}".format(parsed_response))
 
-    return JsonResponse(parsed_response, safe=False)
+    return JsonResponse(parsed_response, safe=False, json_dumps_params={'ensure_ascii': False})
