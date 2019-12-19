@@ -34,5 +34,19 @@ def users(request):
     else:
         response = User.objects.all()
 
-    data = serializers.serialize('json', response)
-    return HttpResponse(data, content_type="application/json")
+    parsed_response = []
+
+    for user in response:
+        parsed_response.append({
+            "id": str(user.pk),
+            "pseudo": user.full_name,
+            "email": user.email
+
+        })
+
+    print("PARSED_RESPONCE > {}".format(parsed_response))
+
+    return JsonResponse(parsed_response, safe=False)
+
+    # data = serializers.serialize('json', parsed_response, fields=('pk', 'full_name','email'))
+    # return HttpResponse(data, content_type="application/json")

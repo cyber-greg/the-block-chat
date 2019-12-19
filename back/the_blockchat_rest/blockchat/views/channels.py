@@ -37,5 +37,26 @@ def channels(request):
     if chatroomID:
         response = Channel.objects.filter(chatroom__id__contains=chatroomID)
 
-    data = serializers.serialize('json', response)
-    return HttpResponse(data, content_type="application/json")
+    # data = serializers.serialize('json', response)
+    # return HttpResponse(data, content_type="application/json")
+
+    parsed_response = []
+
+    for channel in response:
+
+        allowedUserIds = []
+        for user in channel.allowed_users.all():
+            allowedUserIds.append(str(user.id))
+
+        parsed_response.append({
+            "id": str(channel.pk),
+            "chatroomId": str(channel.chatroom.id),
+            "userIds": allowedUserIds,
+            "name": channel.name,
+            "isPrivate": channel.private
+
+        })
+
+    print("PARSED_RESPONCE > {}".format(parsed_response))
+
+    return JsonResponse(parsed_response, safe=False)

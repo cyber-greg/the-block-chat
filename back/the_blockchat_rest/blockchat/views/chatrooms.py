@@ -31,10 +31,29 @@ def chatrooms(request):
 
     if chatroomID:
         response = Chatroom.objects.filter(id=chatroomID)
-    elif userID:
-        response = Chatroom.objects.filter(chatroom__id__contains=channelID)
+    # elif userID:
+    #     response = Chatroom.objects.filter(chatroom__id__contains=channelID) # ! FIXME
     else:
         response = Chatroom.objects.all()
 
-    data = serializers.serialize('json', response)
-    return HttpResponse(data, content_type="application/json")
+    # data = serializers.serialize('json', response)
+    # return HttpResponse(data, content_type="application/json")
+
+    parsed_response = []
+
+    for chatroom in response:
+
+        adminIds = []
+        for admin in chatroom.chatroom_admins.all():
+            adminIds.append(str(admin.id))
+
+        parsed_response.append({
+            "id": str(chatroom.pk),
+            "name": chatroom.name,
+            "adminIds": adminIds
+
+        })
+
+    print("PARSED_RESPONCE > {}".format(parsed_response))
+
+    return JsonResponse(parsed_response, safe=False)

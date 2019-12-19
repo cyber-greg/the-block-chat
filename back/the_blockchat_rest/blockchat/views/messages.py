@@ -31,5 +31,25 @@ def messages(request):
     if channelID:
         response = Message.objects.filter(channel__id__contains=channelID)
 
-    data = serializers.serialize('json', response)
-    return HttpResponse(data, content_type="application/json")
+    # data = serializers.serialize('json', response)
+    # return HttpResponse(data, content_type="application/json")
+
+    parsed_response = []
+
+    for message in response:
+#   id: string;
+#   channelId: string;
+#   userId: string;
+#   content: string;
+#   createdAt: string;
+        parsed_response.append({
+            "id": str(message.pk),
+            "channelId": str(message.channel),
+            "userId": str(message.author.id),
+            "content": message.content,
+            "createdAt": message.created_at
+        })
+
+    print("PARSED_RESPONCE > {}".format(parsed_response))
+
+    return JsonResponse(parsed_response, safe=False)
