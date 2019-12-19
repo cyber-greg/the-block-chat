@@ -1,9 +1,12 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
 import json
 
-from ..models import Message
+from ..models import Message, Channel
 from django.core import serializers
 
 
@@ -18,14 +21,24 @@ def messages(request):
     elif request.method == 'POST':
         data = json.loads(request.body)
         print("CONTENT >>> {}".format(data['content']))
+
         channelID = data['channel']
-        new_message = Message(
-            content=data['content'],
-            date=data['date'],
-            author=data['author'],
-            channel=data['channel']  # ! get channel from channelID
-        )
-        new_message.save()
+        authorID = data['author']
+
+        # get objects from ID
+        query_author = User.objects.filter(pk=authorID)
+        query_channel = Channel.objects.filter(pk=channelID)
+
+        if query_author.first() and query_channel.first():
+            new_message = Message(
+                content=data['content'],
+                # date=data['date'], # not needed, automatically set
+                author=query_author.first(),
+                channel=query_channel.first()
+            )
+            new_message.save()
+        else:
+            pass # TODO return error 422
 
     response = []
     if channelID:
@@ -53,5 +66,3 @@ def messages(request):
     print("PARSED_RESPONCE > {}".format(parsed_response))
 
     return JsonResponse(parsed_response, safe=False, json_dumps_params={'ensure_ascii': False})
-
-    # return JsonResponse(parsed_response, safe=False)
