@@ -29,10 +29,10 @@ def messages(request):
         query_author = User.objects.filter(pk=authorID)
         query_channel = Channel.objects.filter(pk=channelID)
 
+        # if needed elements are present, save new message
         if query_author.first() and query_channel.first():
             new_message = Message(
                 content=data['content'],
-                # date=data['date'], # not needed, automatically set
                 author=query_author.first(),
                 channel=query_channel.first()
             )
@@ -44,11 +44,10 @@ def messages(request):
     if channelID:
         response = Message.objects.filter(channel__id__contains=channelID)
 
-    # data = serializers.serialize('json', response)
-    # return HttpResponse(data, content_type="application/json")
-
+    # preparing http response
     parsed_response = []
 
+    # serializing response
     for message in response:
 #   id: string;
 #   channelId: string;
@@ -62,7 +61,5 @@ def messages(request):
             "content": message.content,
             "createdAt": message.created_at.isoformat()
         })
-
-    print("PARSED_RESPONCE > {}".format(parsed_response))
 
     return JsonResponse(parsed_response, safe=False, json_dumps_params={'ensure_ascii': False})

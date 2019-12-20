@@ -57,6 +57,4 @@ def channels(request):
 
         })
 
-    print("PARSED_RESPONCE > {}".format(parsed_response))
-
     return JsonResponse(parsed_response, safe=False, json_dumps_params={'ensure_ascii': False})
