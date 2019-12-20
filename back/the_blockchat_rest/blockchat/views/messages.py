@@ -19,7 +19,7 @@ def messages(request):
         print("GET MESSAGES FROM CHANNEL >>> {}".format(channelID))
 
     elif request.method == 'POST':
-        data = json.loads(request.body)
+        data = json.loads(request.body.decode('utf-8'))
         print("CONTENT >>> {}".format(data['content']))
 
         channelID = data['channel']

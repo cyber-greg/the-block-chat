@@ -13,7 +13,7 @@ User = get_user_model()
 def login(request):
 
     if request.method == 'POST':
-        data = json.loads(request.body)
+        data = json.loads(request.body.decode('utf-8'))
         print("CONTENT >>> {} / {}".format(data['email'], data['password']))
         user_email = data['email']
 
