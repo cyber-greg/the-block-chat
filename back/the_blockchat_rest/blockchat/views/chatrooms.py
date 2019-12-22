@@ -3,8 +3,9 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import json
 
+from django.contrib.auth import get_user_model
+User = get_user_model()
 from ..models import Chatroom
-from django.core import serializers
 
 
 @csrf_exempt  # ! FOR TEST PURPOSE ONLY - REMOVE IN PROD
@@ -17,28 +18,37 @@ def chatrooms(request):
        print("GET CHATROOM FROM ID >>> {}".format(chatroomID))
 
     elif request.method == 'POST':
-        pass
-        # data = json.loads(request.body)
-        # print("CONTENT >>> {}".format(data['content']))
-        # channelID = data['channel']
-        # new_message = Message(
-        #     content=data['content'],
-        #     date=data['date'],
-        #     author=data['author'],
-        #     channel=data['channel'] # ! get channel from channelID
-        # )
-        # new_message.save()
+        chatroomID = None
+        data = json.loads(request.body.decode('utf-8'))
+
+        # get JSON data
+        name = data['name']
+        userID = data['userId']
+
+        user = User.objects.get(pk=userID)
+
+        # create new channel
+        new_chatroom = Chatroom(
+            name=name
+        )
+
+        new_chatroom.save()
+        new_chatroom.chatroom_admins.add(user)
+
+
+    # ##################### #
+    # get data for response #
+    # ##################### #
+    response = []
 
     if chatroomID:
         response = Chatroom.objects.filter(id=chatroomID)
-    # elif userID:
-    #     response = Chatroom.objects.filter(chatroom__id__contains=channelID) # ! FIXME
-    else:
-        response = Chatroom.objects.all() # ! only chatroom where I am allowed
+    elif userID:
+        response = Chatroom.objects.filter(chatroom_admins__in=userID)
 
-    # data = serializers.serialize('json', response)
-    # return HttpResponse(data, content_type="application/json")
-
+    # ######################## #
+    # format response for http #
+    # ######################## #
     parsed_response = []
 
     for chatroom in response:

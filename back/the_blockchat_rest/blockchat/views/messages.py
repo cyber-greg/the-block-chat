@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 User = get_user_model()
@@ -38,7 +38,7 @@ def messages(request):
             )
             new_message.save()
         else:
-            pass # TODO return error 422
+            return HttpResponseBadRequest("Message is incomplete")
 
     response = []
     if channelID:
