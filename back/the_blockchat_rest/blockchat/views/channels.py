@@ -1,3 +1,4 @@
+from ..models import Channel, Chatroom
 from django.core import serializers
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
@@ -8,7 +9,6 @@ import json
 # import MODELS
 from django.contrib.auth import get_user_model
 User = get_user_model()
-from ..models import Channel, Chatroom
 
 
 @csrf_exempt  # ! FOR TEST PURPOSE ONLY - REMOVE IN PROD
@@ -39,8 +39,8 @@ def channels(request):
         )
 
         new_channel.save()
-        new_channel.allowed_users.set(User.objects.filter(id__in=allowed_userIDs))
-
+        new_channel.allowed_users.set(
+            User.objects.filter(id__in=allowed_userIDs))
 
     # ##################### #
     # get data for response #
@@ -56,7 +56,7 @@ def channels(request):
         # get only channels with user in channel or admin of related chatroom
         user = User.objects.get(pk=userID)
         debug_response = Channel.objects.all()
-        response = Channel.objects.filter(Q(allowed_users__in=[user]) | Q(chatroom__chatroom_admins__in=[user]))
+        response = Channel.objects.filter(Q(allowed_users__in=[user]) | Q(chatroom__chatroom_admins__in=[user])).distinct()
 
     # ######################## #
     # format response for http #
